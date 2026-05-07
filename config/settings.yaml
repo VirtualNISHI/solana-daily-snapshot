@@ -31,10 +31,11 @@ daily_snapshot:
   # Render a 1200x720 PNG card and attach to Discord/X. False = embed/tweet text fallback.
   image_mode: true
 
-  # Optional Japanese translation. Off by default — token tickers (WIF, SOL,
-  # JUP) read the same in any language. Flip on if you want JP qualifiers
-  # added (e.g. "WIF / SOL · raydium" → "WIF/SOL レイディウム上場").
-  enable_jp_translation: false
+  # Japanese label generation via Gemini. Tickers stay in English; qualifiers
+  # like "ステーブル" or "LST" are added when they help. The DEX name gets
+  # capitalized. Most rows pass through near-verbatim with just title-cased DEX.
+  # Set false to skip the LLM call entirely (display the raw English label).
+  enable_jp_translation: true
   jp_translation_provider: gemini
   jp_translation_model: gemini-2.5-flash-lite
 

@@ -54,9 +54,15 @@ def _row_from_pool(pool: dict, *, category: str) -> SnapshotRow:
     dex = pool.get("dex") or ""
     pair = f"{base} / {quote}" if quote else base
     label = f"{pair} · {dex}" if dex else pair
+    # JP translation cache key: (base, quote, dex) is stable across runs even
+    # when the underlying pool address changes (e.g. liquidity migrates between
+    # pools of the same pair). This means a translated "USDT/USDC Manifest"
+    # label gets reused for every USDT/USDC manifest pool we see, instead of
+    # re-translating per pool address.
+    cache_slug = f"{base}_{quote}_{dex}".lower() if base != "?" else None
     return SnapshotRow(
         market_id=pool.get("pool_address") or pool.get("pool_id") or pair,
-        slug=base.lower() if base != "?" else None,
+        slug=cache_slug,
         question=label,
         yes_price=pool.get("price_usd"),
         one_day_change=pool.get("price_change_24h_frac"),

@@ -30,7 +30,7 @@ class DailySnapshotConfig:
     discord_color: int = 0x9945FF  # Solana purple
     enable_discord: bool = True
     enable_x: bool = True
-    enable_jp_translation: bool = False  # token tickers are universal — off by default
+    enable_jp_translation: bool = True  # capitalize DEX names + add ステーブル/LST qualifiers
     jp_translation_provider: str = "gemini"  # "gemini" | "anthropic"
     jp_translation_model: str = "gemini-2.5-flash-lite"
     image_mode: bool = True

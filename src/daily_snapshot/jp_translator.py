@@ -28,26 +28,35 @@ log = logging.getLogger(__name__)
 # Embedded examples chosen to match the screenshot's house style: tickers in
 # English, qualifiers in Japanese, dates compressed. The model imitates these
 # more reliably than free-form rules.
-SYSTEM_PROMPT = """You generate short Japanese labels for Polymarket prediction-market questions, used in a daily Discord/X snapshot.
+SYSTEM_PROMPT = """You generate short Japanese-flavored labels for Solana DEX trading pairs, used in a daily Discord/X snapshot card.
+
+Input format: "{BASE} / {QUOTE} · {DEX}"  (e.g. "WIF / SOL · raydium")
 
 Style:
-- Mix English keywords (BTC, SOL, ETH, FOMC, ETF, Trump, Fed, CPI, dollar amounts) with Japanese qualifiers.
-- 8-20 visible characters preferred (CJK width).
-- Preserve numeric values, tickers, and named entities verbatim in English/Latin.
-- Use Japanese for verbs/qualifiers: 承認 / 到達 / 削減 / リセッション / 確認 / 突破 / 達成.
-- Drop "Will ... ?" framing — output a noun phrase, not a question.
-- Drop dates if implied; keep year (2026年内) if essential to the bet.
+- Keep ALL token tickers verbatim in English/Latin (BTC, SOL, USDC, WIF, BONK, JUP).
+  Tickers are universal and should never be translated.
+- Keep DEX names verbatim, but you may capitalize: raydium → Raydium, orca → Orca,
+  pumpswap → PumpSwap, manifest → Manifest, meteora → Meteora.
+- The base/quote separator " / " can stay or become "/" — pick whichever is shorter.
+- Add a short Japanese qualifier ONLY when it adds real clarity. Most pairs should
+  pass through as the symbol pair + DEX. Don't force Japanese for the sake of it.
+- 8-24 visible characters preferred (CJK width).
 - No punctuation at the end. No quotes around the output.
 
-Examples:
-- "Will SOL ETF be approved in 2026?" → "SOL ETF 2026年内承認"
-- "Will the Fed cut 25bp in December?" → "FOMC 12月-25bp"
-- "Will Bitcoin ETF reach $100B AUM by EOY?" → "BTC ETF $100B by EOY"
-- "Will the US enter recession in 2026?" → "US 2026年内リセッション"
-- "Will ETH staking ratio reach 38%?" → "ETH staking 比率38%"
-- "Will Bitcoin hit $150k by June 30, 2026?" → "BTC $150k 6月末まで"
-- "Will Donald Trump announce US blockade of Hormuz lifted by May 8?" → "Trump ホルムズ封鎖解除5/8"
-- "Strait of Hormuz traffic returns to normal by May 15?" → "ホルムズ通航正常化5/15"
+Acceptable qualifier patterns (use sparingly):
+- Stablecoin pairs: prefix "ステーブル" — e.g. "USDT/USDC · manifest" → "ステーブル USDT/USDC Manifest"
+- LST / liquid staking: prefix "LST" — e.g. "JITOSOL / SOL · orca" → "LST JitoSOL/SOL Orca"
+- Meme tokens with Japanese-recognizable name: keep ticker, add JP gloss in parens —
+  e.g. "DOGWIFHAT / SOL · raydium" → "WIF (犬の帽子) / SOL Raydium"
+
+Examples (most are pass-through with capitalization only):
+- "WIF / SOL · raydium" → "WIF / SOL Raydium"
+- "BONK / SOL · orca" → "BONK / SOL Orca"
+- "JUP / USDC · meteora" → "JUP / USDC Meteora"
+- "USDT / USDC · manifest" → "ステーブル USDT/USDC Manifest"
+- "JITOSOL / SOL · orca" → "LST JitoSOL/SOL Orca"
+- "PEPE / SOL · pumpswap" → "PEPE / SOL PumpSwap"
+- "DOGWIFHAT / SOL · raydium" → "WIF (犬の帽子) / SOL Raydium"
 """
 
 
